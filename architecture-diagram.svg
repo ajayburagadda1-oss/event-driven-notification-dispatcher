@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1250" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+  </defs>
+  <rect width="900" height="1250" fill="#f8fafc"/>
+  <text x="450" y="40" text-anchor="middle" font-size="22" font-weight="bold" fill="#0f172a">Event-Driven Notification Dispatcher — Architecture</text>
+
+  <!-- Client -->
+  <rect x="350" y="70" width="200" height="55" rx="8" fill="#3b82f6"/>
+  <text x="450" y="103" text-anchor="middle" font-size="15" fill="white" font-weight="bold">Client</text>
+  <line x1="450" y1="125" x2="450" y2="160" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="470" y="148" font-size="12" fill="#475569">POST /api/v1/events</text>
+
+  <!-- Express API -->
+  <rect x="330" y="160" width="240" height="55" rx="8" fill="#6366f1"/>
+  <text x="450" y="188" text-anchor="middle" font-size="14" fill="white" font-weight="bold">Express API</text>
+  <text x="450" y="205" text-anchor="middle" font-size="11" fill="#e0e7ff">Validate request</text>
+  <line x1="450" y1="215" x2="450" y2="250" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Save event -->
+  <rect x="300" y="250" width="300" height="55" rx="8" fill="#0ea5e9"/>
+  <text x="450" y="278" text-anchor="middle" font-size="14" fill="white" font-weight="bold">Save event in SQLite</text>
+  <text x="450" y="295" text-anchor="middle" font-size="11" fill="#e0f2fe">events table (event_type, payload)</text>
+  <line x1="450" y1="305" x2="450" y2="340" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Create notification -->
+  <rect x="270" y="340" width="360" height="55" rx="8" fill="#0ea5e9"/>
+  <text x="450" y="368" text-anchor="middle" font-size="14" fill="white" font-weight="bold">Create notification record</text>
+  <text x="450" y="385" text-anchor="middle" font-size="11" fill="#e0f2fe">notifications table, status = "pending"</text>
+  <line x1="450" y1="395" x2="450" y2="430" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Push to queue -->
+  <rect x="300" y="430" width="300" height="55" rx="8" fill="#f59e0b"/>
+  <text x="450" y="458" text-anchor="middle" font-size="14" fill="white" font-weight="bold">Push task to in-memory queue</text>
+  <text x="450" y="475" text-anchor="middle" font-size="11" fill="#fef3c7">EventEmitter-based NotificationQueue</text>
+  <line x1="450" y1="485" x2="450" y2="520" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 202 response -->
+  <rect x="300" y="520" width="300" height="55" rx="8" fill="#22c55e"/>
+  <text x="450" y="548" text-anchor="middle" font-size="14" fill="white" font-weight="bold">Return 202 Accepted</text>
+  <text x="450" y="565" text-anchor="middle" font-size="11" fill="#dcfce7">Immediate response — no waiting</text>
+
+  <!-- response back to client -->
+  <line x1="450" y1="575" x2="450" y2="610" stroke="#334155" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="5,4"/>
+  <text x="470" y="598" font-size="12" fill="#475569">HTTP 202 response</text>
+  <rect x="350" y="610" width="200" height="45" rx="8" fill="#3b82f6" opacity="0.6"/>
+  <text x="450" y="638" text-anchor="middle" font-size="13" fill="white">Client receives response</text>
+
+  <!-- Divider -->
+  <line x1="60" y1="695" x2="840" y2="695" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="450" y="685" text-anchor="middle" font-size="12" fill="#94a3b8" font-style="italic">meanwhile, asynchronously in the background...</text>
+
+  <!-- Background worker branch, from queue box -->
+  <line x1="450" y1="485" x2="450" y2="500" stroke="#334155" stroke-width="0" />
+  <path d="M600,457 C 750,457 750,730 700,730" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Worker -->
+  <rect x="550" y="730" width="300" height="55" rx="8" fill="#8b5cf6"/>
+  <text x="700" y="758" text-anchor="middle" font-size="14" fill="white" font-weight="bold">Background worker</text>
+  <text x="700" y="775" text-anchor="middle" font-size="11" fill="#ede9fe">Picks task from queue</text>
+  <line x1="700" y1="785" x2="700" y2="820" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Simulate send -->
+  <rect x="520" y="820" width="360" height="55" rx="8" fill="#8b5cf6"/>
+  <text x="700" y="843" text-anchor="middle" font-size="13" fill="white" font-weight="bold">Simulate sending notification</text>
+  <text x="700" y="860" text-anchor="middle" font-size="10.5" fill="#ede9fe">setTimeout delay 500–1000ms · 10% simulated failure</text>
+  <line x1="700" y1="875" x2="700" y2="910" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Update status -->
+  <rect x="520" y="910" width="360" height="65" rx="8" fill="#0ea5e9"/>
+  <text x="700" y="935" text-anchor="middle" font-size="13" fill="white" font-weight="bold">Update notification status in SQLite</text>
+  <text x="700" y="953" text-anchor="middle" font-size="11" fill="#e0f2fe">"completed" or "failed" (retry_count++ on failure)</text>
+
+  <!-- Legend -->
+  <rect x="60" y="1030" width="780" height="180" rx="8" fill="white" stroke="#e2e8f0"/>
+  <text x="80" y="1058" font-size="13" font-weight="bold" fill="#0f172a">Key points</text>
+  <text x="80" y="1082" font-size="12" fill="#334155">• The HTTP response (202 Accepted) is returned as soon as the task is queued — before the worker runs.</text>
+  <text x="80" y="1104" font-size="12" fill="#334155">• The queue is an in-memory EventEmitter; the worker processes tasks sequentially in the background.</text>
+  <text x="80" y="1126" font-size="12" fill="#334155">• Each notification starts as "pending" and transitions to "completed" or "failed" after the simulated send.</text>
+  <text x="80" y="1148" font-size="12" fill="#334155">• Failures increment retry_count; the queue and worker keep running independent of individual task outcomes.</text>
+  <text x="80" y="1170" font-size="12" fill="#334155">• events and notifications are linked by event_id (foreign key), stored durably in SQLite.</text>
+</svg>
