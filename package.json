@@ -1,0 +1,17 @@
+{
+  "name": "event-driven-notification-dispatcher",
+  "version": "1.0.0",
+  "description": "Lightweight asynchronous notification system using Express, Node.js and SQLite",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
